@@ -1,10 +1,12 @@
 @file:OptIn(ExperimentalSharedTransitionApi::class)
 
-package uz.turgunboyevjurabek.sharedelementtranzitationexample.prsentation.screen
+package uz.turgunboyevjurabek.sharedelementtranzitationexample
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,7 +28,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import uz.turgunboyevjurabek.sharedelementtranzitationexample.R
 import uz.turgunboyevjurabek.sharedelementtranzitationexample.utils.SelectedItem
 
 @Composable
@@ -78,17 +79,31 @@ fun ItemList(
         modifier = modifier
             .size(150.dp)
     ) {
-        Column {
+        /**
+         * sharedBounds -> Row ,Column ... lar uchun ishlaydi.
+         * sharedElement -> Elementlar uchun ishlaydi.
+         */
             with(sharedTransitionScope){
+                Column(
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    modifier=modifier
+                        .sharedBounds(
+                            rememberSharedContentState(key = "$selectedItem"),
+                            animatedVisibilityScope = animatedVisibilityScope,
+                            enter = fadeIn(),
+                            exit = fadeOut(),
+                            resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds(),
+                        )
+                ) {
                 Image(
                     painter = painterResource(id = R.drawable.cat),
                     contentDescription = "cat",
                     contentScale = ContentScale.Crop,
                     modifier = modifier
-                        .sharedElement(
-                            rememberSharedContentState(key = "$selectedItem"),
-                            animatedVisibilityScope = animatedVisibilityScope
-                        )
+//                        .sharedElement(
+//                            rememberSharedContentState(key = "$selectedItem"),
+//                            animatedVisibilityScope = animatedVisibilityScope
+//                        )
                         .fillMaxWidth()
                         .height(90.dp)
                         .clip(ShapeDefaults.Small)
@@ -99,10 +114,10 @@ fun ItemList(
                     fontFamily = FontFamily.SansSerif,
                     fontSize = 20.sp,
                     modifier = modifier.fillMaxWidth()
-                        .sharedElement(
-                            rememberSharedContentState(key = "Item - $selectedItem"),
-                            animatedVisibilityScope = animatedVisibilityScope
-                        )
+//                        .sharedElement(
+//                            rememberSharedContentState(key = "Item - $selectedItem"),
+//                            animatedVisibilityScope = animatedVisibilityScope
+//                        )
                 )
             }
         }
