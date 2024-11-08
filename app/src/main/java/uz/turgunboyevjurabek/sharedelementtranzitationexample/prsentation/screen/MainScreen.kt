@@ -6,25 +6,26 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ShapeDefaults
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import uz.turgunboyevjurabek.sharedelementtranzitationexample.R
 import uz.turgunboyevjurabek.sharedelementtranzitationexample.utils.SelectedItem
 
@@ -36,34 +37,27 @@ fun MainScreen(
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Fixed(2),
+            columns = StaggeredGridCells.Adaptive(80.dp),
             contentPadding = PaddingValues(20.dp),
             verticalItemSpacing = 20.dp,
             horizontalArrangement = Arrangement.spacedBy(20.dp),
         ) {
-            items(30) {it->
-                with(sharedTransitionScope) {
+            items(30) { it ->
                     ItemList(
-                        modifier=modifier
-                            .sharedElement(
-                                rememberSharedContentState(key = "$it"),
-                                animatedVisibilityScope = animatedVisibilityScope
-                            ),
+                        modifier = modifier,
                         selectedItem = it,
                         onShowDetails = onShowDetails,
                         sharedTransitionScope = sharedTransitionScope,
                         animatedVisibilityScope = animatedVisibilityScope
                     )
                 }
-
             }
         }
     }
-}
+
 
 @Composable
 fun ItemList(
@@ -75,21 +69,43 @@ fun ItemList(
 ) {
     Surface(
         onClick = {
+            SelectedItem.selectedItemImage = selectedItem.toString()
+            SelectedItem.selectedItem = "Item - $selectedItem"
             onShowDetails()
-            SelectedItem.selectedItem= selectedItem.toString()
         },
         shape = ShapeDefaults.Small,
-        shadowElevation = 5.dp
+        shadowElevation = 3.dp,
+        modifier = modifier
+            .size(150.dp)
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.cat),
-            contentDescription = "cat",
-            contentScale = ContentScale.Crop,
-            modifier = modifier
-                .clip(ShapeDefaults.Small)
-                .size(150.dp)
+        Column {
+            with(sharedTransitionScope){
+                Image(
+                    painter = painterResource(id = R.drawable.cat),
+                    contentDescription = "cat",
+                    contentScale = ContentScale.Crop,
+                    modifier = modifier
+                        .sharedElement(
+                            rememberSharedContentState(key = "$selectedItem"),
+                            animatedVisibilityScope = animatedVisibilityScope
+                        )
+                        .fillMaxWidth()
+                        .height(90.dp)
+                        .clip(ShapeDefaults.Small)
 
-        )
-
+                )
+                Text(
+                    text = "Item - $selectedItem",
+                    fontFamily = FontFamily.SansSerif,
+                    fontSize = 20.sp,
+                    modifier = modifier.fillMaxWidth()
+                        .sharedElement(
+                            rememberSharedContentState(key = "Item - $selectedItem"),
+                            animatedVisibilityScope = animatedVisibilityScope
+                        )
+                )
+            }
+        }
     }
 }
+
