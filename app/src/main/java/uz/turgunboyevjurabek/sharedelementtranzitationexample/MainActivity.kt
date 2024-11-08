@@ -18,12 +18,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import uz.turgunboyevjurabek.sharedelementtranzitationexample.prsentation.screen.DetailScreen
 import uz.turgunboyevjurabek.sharedelementtranzitationexample.prsentation.screen.MainScreen
 import uz.turgunboyevjurabek.sharedelementtranzitationexample.ui.theme.SharedElementTranzitationExampleTheme
+import uz.turgunboyevjurabek.sharedelementtranzitationexample.utils.SelectedItem
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +35,7 @@ class MainActivity : ComponentActivity() {
             SharedElementTranzitationExampleTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Column(modifier = Modifier.padding(innerPadding)) {
-                        var showDetail by remember { mutableStateOf(false) }
+                        var showDetail by rememberSaveable { mutableStateOf(false) }
 
                         SharedTransitionLayout {
                             AnimatedContent(
