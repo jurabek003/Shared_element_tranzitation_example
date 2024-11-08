@@ -47,8 +47,6 @@ class MainActivity : ComponentActivity() {
                     bottomBar = {
                         BottomAppBar(
                             tonalElevation = 10.dp,
-                            containerColor = Color.White,
-
                             actions = {
                                 IconButton(onClick = {
                                     navController.navigate("animatedVisible")
@@ -70,7 +68,10 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 ) { innerPadding ->
-                    MyNavigation(navController = navController, modifier = Modifier.padding(innerPadding))
+                    MyNavigation(
+                        navController = navController,
+                        modifier = Modifier.padding(innerPadding)
+                    )
                 }
             }
         }
